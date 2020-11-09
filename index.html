@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>First Project</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Goldman&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to right, #a8ff78, #78ffd6);
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        }
+
+        header {
+            font-family: 'Goldman', cursive;
+        }
+
+        .wrapper {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            gap: 20px;
+        }
+
+        .info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            justify-items: center;
+        }
+
+        .info p {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .draw-alert {
+            opacity: 0;
+            transition: all 700ms;
+        }
+
+        .draw-alert-fadeIn {
+            opacity: 1;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(200px, 500px));
+            gap: 10px;
+        }
+
+        .button {
+            width: 100%;
+            padding: 20px;
+            font-size: 32px;
+            background: #5CB270;
+            border: 1px solid yellow;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            color: white;
+            transform: scale(1.01);
+            box-shadow: 0 0 10px yellow;
+        }
+
+        .play-registry {
+            display: grid;
+            align-content: center;
+            justify-items: center;
+        }
+
+        #plays {
+            width: 100%;
+            height: 350px;
+            font-size: 18px;
+            font-weight: bold;
+            resize: none;
+            background: transparent;
+            border: 0;
+            font-weight: bold;
+            text-shadow: 1px 1px;
+
+        }
+
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <h1>ROCK PAPERS AND SCISSORS GAME</h1>
+        <h2>JAVASCRIPT GAME</h2>
+        <hr>
+    </header>
+
+    <div class="wrapper">
+        <div class="info">
+            <p>COMPUTER: <span id="computer-points"> 0 </span></p>
+            <p class="draw-alert">DRAW</p>
+            <p>PLAYER: <span id="player-points"> 0 </span></p>
+        </div>
+
+        <div class="buttons">
+            <button id="rock" class="button">ROCK</button>
+            <button id="paper" class="button">PAPER</button>
+            <button id="scissors" class="button">SCISSORS</button>
+        </div>
+
+
+        <div class="play-registry">
+
+            <textarea id="plays" disabled></textarea>
+
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+        let rock = document.getElementById("rock");
+        let paper = document.getElementById("paper");
+        let scissors = document.getElementById("scissors");
+
+        let computerPoints = document.getElementById("computer-points");
+        let playerPoints = document.getElementById("player-points");
+
+        let plays = document.getElementById("plays");
+
+        let wrapperDiv = document.querySelector(".wrapper");
+        let buttonsDiv = document.querySelector(".buttons");
+        let playRegistryDiv = document.querySelector(".play-registry");
+        let drawAlert = document.querySelector(".draw-alert");
+
+        let resetDiv = document.createElement('div');
+        resetDiv.setAttribute("style", "width: 100%;padding:20px;font-size:32px;background:#5CB270;border:1px solid yellow;text-align:center;cursor:pointer;display:none");
+        resetDiv.textContent = "RESET"
+        wrapperDiv.insertBefore(resetDiv, playRegistryDiv);
+
+        let result;
+        let playerPointsCount = 0;
+        let computerPointsCount = 0;
+
+        rock.addEventListener("click", function () {
+            playRound("rock", computerPlayGenerator());
+
+        })
+        paper.addEventListener("click", function () {
+            playRound("paper", computerPlayGenerator());
+
+        })
+        scissors.addEventListener("click", function () {
+            playRound("scissors", computerPlayGenerator());
+
+        })
+
+        resetDiv.addEventListener("click", function () {
+            resetGame();
+        })
+
+
+
+
+        function computerPlayGenerator() {
+            var plays = ["rock", "paper", "scissors"];
+
+            var random = Math.floor(Math.random() * (3 - 0));
+            return plays[random];
+        }
+
+
+        function playRound(playerSelection, computerSelection) {
+            playerSelection = playerSelection.toLowerCase();
+            plays.value += "You've played: " + playerSelection + "\nComputer has played: " + computerSelection + "\n\n";
+
+            if (playerSelection == computerSelection) {
+                drawAlert.classList.add("draw-alert-fadeIn");
+                setTimeout(() => {
+                    drawAlert.classList.remove("draw-alert-fadeIn");
+                }, 700);
+            }
+
+            if (playerPointsCount == 5 || computerPointsCount == 5) {
+                plays.value = "";
+
+            } else {
+
+                if (playerSelection === computerSelection) {
+
+                } else if (playerSelection === "rock" && computerSelection === "paper") {
+                    computerPointsCount++;
+                } else if (playerSelection === "rock" && computerSelection === "scissors") {
+                    playerPointsCount++;
+                } else if (playerSelection === "paper" && computerSelection === "scissors") {
+                    computerPointsCount++;
+                } else if (playerSelection === "paper" && computerSelection === "rock") {
+                    playerPointsCount++;
+                } else if (playerSelection === "scissors" && computerSelection === "rock") {
+                    computerPointsCount++;
+                } else if (playerSelection === "scissors" && computerSelection === "paper") {
+                    playerPointsCount++;
+                } else {
+                }
+
+                playerPoints.textContent = playerPointsCount;
+                computerPoints.textContent = computerPointsCount;
+
+                if (playerPointsCount == 5) {
+                    plays.value = "";
+                    plays.setAttribute("style", "font-size: 36px");
+                    plays.value = "You've WON!"
+                    buttonsDiv.setAttribute("style", "visibility:hidden");
+                    resetDiv.setAttribute("style", "display:block; width: 100%;padding:20px;font-size:32px;background:#5CB270;border:1px solid yellow;text-align:center;cursor:pointer");
+                } else if (computerPointsCount == 5) {
+                    plays.value = "";
+                    plays.setAttribute("style", "font-size: 36px");
+                    plays.value = "Computer has WON!"
+                    buttonsDiv.setAttribute("style", "visibility:hidden");
+                    resetDiv.setAttribute("style", "display:block; width: 100%;padding:20px;font-size:32px;background:#5CB270;border:1px solid yellow;text-align:center;cursor:pointer");
+
+                }
+
+            }
+
+        }
+
+        function resetGame() {
+            plays.value = "";
+            playerPointsCount = 0;
+            computerPointsCount = 0;
+            playerPoints.textContent = playerPointsCount;
+            computerPoints.textContent = computerPointsCount;
+            plays.setAttribute("style", "font-size: 18px");
+
+            buttonsDiv.setAttribute("style", "visibility:show");
+            resetDiv.setAttribute("style", "display:none");
+        }
+
+    </script>
+
+</body>
+
+</html>
